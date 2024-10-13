@@ -12,6 +12,12 @@ const register = async (req, res) => {
             return res.status(400).json({ message: 'Email already registered' });
         }
 
+        if (req.user) {
+            if (req.user.role == 'PETERNAK'){
+                return res.status(403).json({ message: 'Only PPL can register Peternak'})
+            }
+        }
+
         const user = new User({ nama, email, password: hashedPassword, role, no_telp, alamat });
         await user.save();
         res.status(201).json({ message: 'User registered successfully' });
