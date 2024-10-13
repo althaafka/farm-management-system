@@ -61,7 +61,6 @@ const deleteSapi = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Find the cow by ID and delete it
         const sapi = await Sapi.findByIdAndDelete(id);
 
         if (!sapi) {
