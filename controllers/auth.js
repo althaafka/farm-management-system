@@ -11,7 +11,7 @@ const register = async (req, res) => {
         if (existingUser) {
             return res.status(400).json({ message: 'Email already registered' });
         }
-        
+
         const user = new User({ nama, email, password: hashedPassword, role, no_telp, alamat });
         await user.save();
         res.status(201).json({ message: 'User registered successfully' });
@@ -34,7 +34,7 @@ const login = async (req, res) => {
         const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ token });
     } catch (error) {
-      res.status(400).json({ error: error.message });
+        res.status(400).json({ error: error.message });
     }
 };
 
