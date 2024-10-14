@@ -1,6 +1,6 @@
 const express = require('express');
 const { register, login } = require('../controllers/auth');
-const optionalAuth = require('../middlewares/optional_auth')
+const optionalAuth = require('../middlewares/optionalAuth')
 const router = express.Router();
 
 // POST: register user

@@ -5,7 +5,7 @@ const {
     getStokByKandang,
     updateStokProduk,
     deleteStokProduk
-} = require('../controllers/stok_produk');
+} = require('../controllers/stokProduk');
 const authenticate = require('../middlewares/authenticate');
 
 // Add new Stok Produk

@@ -4,7 +4,8 @@ const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const kandangRoutes = require('./routes/kandang');
 const sapiRoutes = require('./routes/sapi')
-const stokProdukRoutes = require('./routes/stok_produk')
+const stokProdukRoutes = require('./routes/stokProduk')
+const laporanHarianRoutes = require('./routes/laporanHarian')
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/kandang', kandangRoutes);
 app.use('/api/sapi', sapiRoutes);
 app.use('/api/stok-produk', stokProdukRoutes);
+app.use('/api/laporan-harian', laporanHarianRoutes);
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connected'))

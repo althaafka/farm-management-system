@@ -1,4 +1,4 @@
-const StokProduk = require('../models/stok_produk');
+const StokProduk = require('../models/stokProduk');
 const Kandang = require('../models/kandang');
 
 // Add new Stok Produk
