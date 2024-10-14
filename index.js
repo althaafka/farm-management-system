@@ -25,6 +25,8 @@ app.use('/api/stok-produk', stokProdukRoutes);
 app.use('/api/laporan-harian', laporanHarianRoutes);
 app.use('/api/produksi-susu', produksiSusuRoutes);
 
+module.exports = app;
+
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected'))
     .catch((err) => console.log('Database connection error:', err));
