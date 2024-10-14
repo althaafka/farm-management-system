@@ -6,6 +6,7 @@ const kandangRoutes = require('./routes/kandang');
 const sapiRoutes = require('./routes/sapi')
 const stokProdukRoutes = require('./routes/stokProduk')
 const laporanHarianRoutes = require('./routes/laporanHarian')
+const produksiSusuRoutes = require('./routes/produksiSusu')
 
 dotenv.config();
 
@@ -20,8 +21,9 @@ app.use('/api/kandang', kandangRoutes);
 app.use('/api/sapi', sapiRoutes);
 app.use('/api/stok-produk', stokProdukRoutes);
 app.use('/api/laporan-harian', laporanHarianRoutes);
+app.use('/api/produksi-susu', produksiSusuRoutes);
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected'))
     .catch((err) => console.log('Database connection error:', err));
 
