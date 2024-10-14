@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
 const kandangRoutes = require('./routes/kandang');
 const sapiRoutes = require('./routes/sapi')
 const stokProdukRoutes = require('./routes/stokProduk')
@@ -17,6 +18,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/kandang', kandangRoutes);
 app.use('/api/sapi', sapiRoutes);
 app.use('/api/stok-produk', stokProdukRoutes);
