@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authenticate = require('../middlewares/authenticate');
-const authorize = require('../middlewares/authorize'); // Ensure PPL authorization
+const authorize = require('../middlewares/authorize');
 const {
     getAllUsers,
     getUserById,

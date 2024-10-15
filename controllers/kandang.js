@@ -74,7 +74,7 @@ const addPeternakToKandang = async (req, res) => {
         // Verify peternak_id
         const peternak = await User.findById(peternak_id);
         if (!peternak) {
-            return res.status(400).json({ message: 'Invalid peternak ID' });
+            return res.status(404).json({ message: 'Peternak not found' });
         }
 
         // Check if peternak is already assigned
