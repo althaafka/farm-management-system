@@ -10,13 +10,9 @@ Farm Management System adalah aplikasi berbasis Node.js dan Express untuk memban
 - **Manajemen Produksi Susu** 
 - **JWT Authentication** 
 
----
-
 ## **Persyaratan**
 - **Node.js** v16.x atau lebih baru
 - **MongoDB Atlas** atau MongoDB lokal
-
----
 
 ## **Instalasi dan Konfigurasi**
 
@@ -46,20 +42,14 @@ Farm Management System adalah aplikasi berbasis Node.js dan Express untuk memban
    ```
    Aplikasi akan berjalan di [http://localhost:5000](http://localhost:5000).
 
----
-
 ## **Deployment**
 Aplikasi ini telah di-deploy dan dapat diakses di:
 
 **[https://farm-management-system-7hd46v5gy-althaafkas-projects.vercel.app](https://farm-management-system-7hd46v5gy-althaafkas-projects.vercel.app)**
 
----
-
 ## **API Documentation dengan Postman**
 Terdapat dokumentasi API menggunakan Postman. Anda bisa mengaksesnya dengan link berikut:
 [Farm Management System.postman_collection.json](https://github.com/user-attachments/files/17382288/Farm.Management.System.postman_collection.json)
-
----
 
 ## **API Endpoints**
 
@@ -120,8 +110,6 @@ Terdapat dokumentasi API menggunakan Postman. Anda bisa mengaksesnya dengan link
 | PUT    | `/api/laporan-harian/:id`   | Update laporan harian              | PETERNAK |
 | DELETE | `/api/laporan-harian/:id`   | Hapus laporan harian               | PETERNAK |
 
----
-
 ## **Cara Menjalankan Tes**
 1. **Install Jest dan Supertest:**
    ```bash
@@ -132,3 +120,5 @@ Terdapat dokumentasi API menggunakan Postman. Anda bisa mengaksesnya dengan link
    ```bash
    npm test
    ```
+![image](https://github.com/user-attachments/assets/b1521dcd-281e-4267-bdc6-a4e4afd57832)
+
