@@ -59,7 +59,7 @@ Aplikasi ini telah di-deploy dan dapat diakses di:
 ## **API Documentation dengan Postman**
 Terdapat dokumentasi API menggunakan Postman. Anda bisa mengaksesnya dengan link berikut:
 
-**[Postman Documentation](https://api.postman.com/collections/29126938-8be2997b-c11a-4df1-aed4-e1be8fa437ec?access_key=PMAT-01JA8B2ZZDY5175HV93SJND0W1)**
+**[Postman Documentation](https://web.postman.co/workspace/30cdf051-25e8-422b-a327-f9ac63b80a2c)**
 
 ---
 
