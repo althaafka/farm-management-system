@@ -1,4 +1,3 @@
-
 # **Farm Management System 🐄🌾**
 
 Farm Management System adalah aplikasi berbasis Node.js dan Express untuk membantu mengelola peternakan, termasuk **registrasi pengguna (PETERNAK dan PPL)**, **manajemen kandang**, **sapi**, **stok produk**, **produksi susu**, dan **laporan harian**. Aplikasi ini mendukung autentikasi JWT untuk menjaga keamanan akses.
@@ -52,14 +51,13 @@ Farm Management System adalah aplikasi berbasis Node.js dan Express untuk memban
 ## **Deployment**
 Aplikasi ini telah di-deploy dan dapat diakses di:
 
-**[https://farm-management-system-nu1idyrw6-althaafkas-projects.vercel.app](https://farm-management-system-nu1idyrw6-althaafkas-projects.vercel.app)**
+**[https://farm-management-system-7hd46v5gy-althaafkas-projects.vercel.app](https://farm-management-system-7hd46v5gy-althaafkas-projects.vercel.app)**
 
 ---
 
 ## **API Documentation dengan Postman**
 Terdapat dokumentasi API menggunakan Postman. Anda bisa mengaksesnya dengan link berikut:
-
-**[Postman Documentation]()**
+[Farm Management System.postman_collection.json](https://github.com/user-attachments/files/17382288/Farm.Management.System.postman_collection.json)
 
 ---
 
@@ -68,24 +66,41 @@ Terdapat dokumentasi API menggunakan Postman. Anda bisa mengaksesnya dengan link
 ### **Auth Routes**
 | Method | Endpoint             | Deskripsi                        | Authorization |
 |--------|----------------------|----------------------------------|---------------|
-| POST   | `/api/auth/register` | Register PPL atau PETERNAK       | Bearer `<token>` (opsional untuk PPL) |
+| POST   | `/api/auth/register` | Register PPL atau PETERNAK       | opsional untuk PPL |
 | POST   | `/api/auth/login`    | Login untuk PPL atau PETERNAK    | -             |
 
 ### **User Routes**
 | Method | Endpoint             | Deskripsi                        | Authorization |
 |--------|----------------------|----------------------------------|---------------|
-| GET    | `/api/users`         | Mendapatkan daftar pengguna     | PPL           |
-| GET    | `/api/users/:id`     | Mendapatkan detail pengguna     | PPL/User itu sendiri |
-| PUT    | `/api/users/:id`     | Update informasi pengguna       | User itu sendiri |
-| DELETE | `/api/users/:id`     | Menghapus pengguna              | PPL           |
+| GET    | `/api/users`         | Mendapatkan daftar pengguna     | Bearer `<token>`           |
+| GET    | `/api/users/:id`     | Mendapatkan detail pengguna     | Bearer `<token>` |
+| PUT    | `/api/users`         | Update informasi pengguna       | User itu sendiri |
+| DELETE | `/api/users/:id`     | Menghapus pengguna              | Bearer `<token>`   |
 
 ### **Kandang Routes**
 | Method | Endpoint                        | Deskripsi                        | Authorization |
 |--------|---------------------------------|----------------------------------|---------------|
-| POST   | `/api/kandang`                  | Tambah kandang baru              | Bearer `<token>` |
-| GET    | `/api/kandang/:id`              | Mendapatkan detail kandang       | Bearer `<token>` |
-| PUT    | `/api/kandang/:id`              | Update kandang                   | Bearer `<token>` |
-| DELETE | `/api/kandang/:id`              | Hapus kandang                    | Bearer `<token>` |
+| POST   | `/api/kandang`                  | Tambah kandang baru              | PPL |
+| PUT    | `/api/kandang/:id`              | Update kandang                   | PPL |
+| PUT    | `/api/kandang/:id/add-peternak` | Add peternak                     | PPL |
+| PUT    | `/api/kandang/:id/remove-peternak` | Remove peternak                     | PPL |
+| DELETE | `/api/kandang/:id`              | Hapus kandang                    | PPL |
+
+### **Sapi Routes**
+| Method | Endpoint                    | Deskripsi                   | Authorization |
+|--------|-----------------------------|-----------------------------|---------------|
+| POST   | `/api/sapi`                 | Tambah sapi baru            | Bearer `<token>` |
+| GET    | `/api/sapi/:kandang_id`             | Mendapatkan detail sapi per kandang     | |
+| PUT    | `/api/sapi/:id`             | Update data sapi            | Bearer `<token>` |
+| DELETE | `/api/sapi/:id`             | Hapus sapi                  | Bearer `<token>` |
+
+### **Stok Produk Routes**
+| Method | Endpoint                    | Deskripsi                      | Authorization |
+|--------|-----------------------------|--------------------------------|---------------|
+| POST   | `/api/stok-produk`          | Tambah stok produk baru        | Bearer `<token>` |
+| GET    | `/api/stok-produk/:kandang_id`      | Mendapatkan detail stok produk per kandang |  |
+| PUT    | `/api/stok-produk/:id`      | Update stok produk             | Bearer `<token>` |
+| DELETE | `/api/stok-produk/:id`      | Hapus stok produk              | Bearer `<token>` |
 
 ### **Produksi Susu Routes**
 | Method | Endpoint                       | Deskripsi                         | Authorization |
@@ -96,29 +111,14 @@ Terdapat dokumentasi API menggunakan Postman. Anda bisa mengaksesnya dengan link
 | PUT    | `/api/produksi-susu/:id`       | Update data produksi susu         | Bearer `<token>` |
 | DELETE | `/api/produksi-susu/:id`       | Hapus produksi susu               | Bearer `<token>` |
 
-### **Sapi Routes**
-| Method | Endpoint                    | Deskripsi                   | Authorization |
-|--------|-----------------------------|-----------------------------|---------------|
-| POST   | `/api/sapi`                 | Tambah sapi baru            | Bearer `<token>` |
-| GET    | `/api/sapi/:id`             | Mendapatkan detail sapi     | Bearer `<token>` |
-| PUT    | `/api/sapi/:id`             | Update data sapi            | Bearer `<token>` |
-| DELETE | `/api/sapi/:id`             | Hapus sapi                  | Bearer `<token>` |
-
-### **Stok Produk Routes**
-| Method | Endpoint                    | Deskripsi                      | Authorization |
-|--------|-----------------------------|--------------------------------|---------------|
-| POST   | `/api/stok-produk`          | Tambah stok produk baru        | Bearer `<token>` |
-| GET    | `/api/stok-produk/:id`      | Mendapatkan detail stok produk | Bearer `<token>` |
-| PUT    | `/api/stok-produk/:id`      | Update stok produk             | Bearer `<token>` |
-| DELETE | `/api/stok-produk/:id`      | Hapus stok produk              | Bearer `<token>` |
 
 ### **Laporan Harian Routes**
 | Method | Endpoint                    | Deskripsi                          | Authorization |
 |--------|-----------------------------|------------------------------------|---------------|
-| POST   | `/api/laporan-harian`       | Tambah laporan harian baru         | Bearer `<token>` |
+| POST   | `/api/laporan-harian`       | Tambah laporan harian baru         | PETERNAK |
 | GET    | `/api/laporan-harian/:id`   | Mendapatkan detail laporan harian | Bearer `<token>` |
-| PUT    | `/api/laporan-harian/:id`   | Update laporan harian              | Bearer `<token>` |
-| DELETE | `/api/laporan-harian/:id`   | Hapus laporan harian               | Bearer `<token>` |
+| PUT    | `/api/laporan-harian/:id`   | Update laporan harian              | PETERNAK |
+| DELETE | `/api/laporan-harian/:id`   | Hapus laporan harian               | PETERNAK |
 
 ---
 
