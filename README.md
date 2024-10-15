@@ -45,11 +45,12 @@ Farm Management System adalah aplikasi berbasis Node.js dan Express untuk memban
 ## **Deployment**
 Aplikasi ini telah di-deploy dan dapat diakses di:
 
-**[https://farm-management-system-7hd46v5gy-althaafkas-projects.vercel.app](https://farm-management-system-7hd46v5gy-althaafkas-projects.vercel.app)**
+**[https://farm-management-system-7hd46v5gy-althaafkas-projects.vercel.app](https://farm-management-system-cty9bcrft-althaafkas-projects.vercel.app)**
 
 ## **API Documentation dengan Postman**
 Terdapat dokumentasi API menggunakan Postman. Anda bisa mengaksesnya dengan link berikut:
 [Farm Management System.postman_collection.json](https://github.com/user-attachments/files/17382288/Farm.Management.System.postman_collection.json)
+Ubah collection variable base_url
 
 ## **API Endpoints**
 
