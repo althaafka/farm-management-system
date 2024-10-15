@@ -7,16 +7,16 @@ const createLaporanHarian = async (req, res) => {
     try {
         const { kandang_id: reqKandangId, id_produk, tanggal, pakan_terpakai, obat_terpakai, deplesi, keterangan } = req.body;
         const peternak_id = req.user.userId;
-        
+
         const inputTanggal = new Date(tanggal);
         const today = new Date();
         if (inputTanggal > today) {
             return res.status(400).json({ message: 'Report date cannot be in the future' });
         }
-        
+
         const produk = await StokProduk.findById(id_produk);
         if (!produk) {
-            return res.status(404).json({ message: 'Produk not found' })
+            return res.status(404).json({ message: 'Produk not found' });
         }
 
         const kandang_id = reqKandangId || produk.kandang_id;
@@ -29,10 +29,13 @@ const createLaporanHarian = async (req, res) => {
             return res.status(404).json({ message: 'Kandang not found' });
         }
 
+        if (!kandang.peternak_ids.includes(peternak_id)) {
+            return res.status(403).json({ message: 'You are not assigned to this Kandang' });
+        }
+
         if (kandang.status !== 'PRODUKSI') {
             return res.status(400).json({ message: 'Reports can only be created for Kandang in production' });
         }
-
 
         const laporan = new LaporanHarian({
             peternak_id,
@@ -70,7 +73,7 @@ const getLaporanByKandang = async (req, res) => {
 const updateLaporanHarian = async (req, res) => {
     try {
         const { id } = req.params;
-        const peternak_id = req.user.userId; 
+        const peternak_id = req.user.userId;
 
         const laporan = await LaporanHarian.findById(id);
         if (!laporan) {
@@ -81,36 +84,16 @@ const updateLaporanHarian = async (req, res) => {
             return res.status(403).json({ message: 'Forbidden' });
         }
 
-        if (req.body.tanggal){
-            const inputTanggal = new Date(req.body.tanggal);
-            const today = new Date();
-            if (inputTanggal > today) {
-                return res.status(400).json( { error: 'Invalid or future report date' })
-            }
+        const kandang = await Kandang.findById(laporan.kandang_id);
+        if (!kandang) {
+            return res.status(404).json({ message: 'Kandang not found' });
         }
 
-        if (req.body.id_produk || req.body.kandang_id) {
-            const id_produk = req.body.id_produk || laporan.id_produk;
-            const produk = await StokProduk.findById(id_produk);
-
-            if (!produk) {
-                return res.status(404).json({ message: 'Produk not found' })
-            }
-
-            const kandang_id = req.body.kandang_id || produk.kandang_id;
-            if (produk.kandang_id.toString() != kandang_id.toString()) {
-                return res.status(400).json({ message: 'Produk does not belong to the specified Kandang' });
-            }
-    
-            const kandang = await Kandang.findById(kandang_id);
-            if (!kandang) {
-                return res.status(404).json({ message: 'Kandang not found' });
-            }
-
-            req.body.kandang_id = kandang_id;
+        if (!kandang.peternak_ids.includes(peternak_id)) {
+            return res.status(403).json({ message: 'You are not authorized to update reports for this Kandang' });
         }
 
-        const { umur, ...updatedData } = req.body
+        const { umur, ...updatedData } = req.body;
         const updatedLaporan = await LaporanHarian.findByIdAndUpdate(id, updatedData, { new: true });
         res.status(200).json({ message: 'Daily report updated successfully', laporan: updatedLaporan });
     } catch (error) {
