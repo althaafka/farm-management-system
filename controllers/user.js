@@ -37,9 +37,6 @@ const updateUser = async (req, res) => {
         if (updates.email || updates.password || updates.role) {
             return res.status(400).json({ error: "You can not change email, password, or role"})
         }
-        delete updates.email;
-        delete updates.password;
-        delete updates.role; 
 
         const updatedUser = await User.findByIdAndUpdate(id, updates, { new: true, select: 'nama no_telp alamat' });
 
@@ -49,7 +46,7 @@ const updateUser = async (req, res) => {
 
         res.status(200).json({ message: 'User updated successfully', user: updatedUser });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 

@@ -5,6 +5,11 @@ const jwt = require('jsonwebtoken');
 const register = async (req, res) => {
     try {
         const { nama, email, password, role, no_telp, alamat } = req.body;
+
+        if (!nama || !email || !password || !role) {
+            return res.status(400).json({ message: 'All required fields must be filled' });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const existingUser = await User.findOne({ email });
@@ -22,25 +27,30 @@ const register = async (req, res) => {
         await user.save();
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        if ( !email || !password ) {
+            return res.status(400).json({ message: 'All required fields must be filled' });
+        }
+
         const user = await User.findOne({ email });
 
-        if (!user) return res.status(400).json({ message: 'Invalid credentials' });
+        if (!user) return res.status(401).json({ message: 'Invalid credentials' });
 
         if (!await bcrypt.compare(password, user.password)) {
-            return res.status(400).json({ message: 'Invalid credentials' });  
+            return res.status(401).json({ message: 'Invalid credentials' });  
         }  
 
-        const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '8h' });
         res.json({ token });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 

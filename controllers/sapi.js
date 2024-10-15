@@ -6,6 +6,14 @@ const createSapi = async (req, res) => {
     try {
         const { kode_sapi, jenis_kelamin, berat, tgl_pembelian, harga_beli, kandang_id } = req.body;
 
+        if (!kode_sapi || !jenis_kelamin || !kandang_id ) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+
+        if ( (berat != null && berat < 0) || (harga_beli != null && harga_beli < 0)) {
+            return res.status(400).json({ message: 'Berat and Harga Beli must be positive values' });
+        }
+
         const kandang = await Kandang.findById(kandang_id);
         if (!kandang) {
             return res.status(404).json({ message: 'Kandang not found' });
@@ -22,7 +30,7 @@ const createSapi = async (req, res) => {
 
         res.status(201).json({ message: 'Sapi successfully added', sapi });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -43,6 +51,11 @@ const getSapiByKandang = async (req, res) => {
 const updateSapi = async (req, res) => {
     try {
         const { id } = req.params;
+        const { berat, harga_beli } = req.body;
+
+        if ( (berat != null && berat < 0) || (harga_beli != null && harga_beli < 0)) {
+            return res.status(400).json({ message: 'Berat and Harga Beli must be positive values' });
+        }
 
         const sapi = await Sapi.findByIdAndUpdate(id, req.body, { new: true });
 
@@ -50,9 +63,17 @@ const updateSapi = async (req, res) => {
             return res.status(404).json({ message: 'Sapi not found' });
         }
 
+
+        if (req.body.kandang_id) {
+            const kandang = await Kandang.findById(req.body.kandang_id);
+            if (!kandang) {
+                return res.status(404).json({ message: 'Kandang not found' });
+            }
+        }
+
         res.status(200).json({ message: 'Sapi successfully updated', sapi });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 

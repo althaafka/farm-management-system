@@ -7,13 +7,21 @@ const createProduksiSusu = async (req, res) => {
     try {
         const { sapi_id, tanggal, jumlah_liter, harga_jual } = req.body;
 
+        if (!jumlah_liter || !harga_jual ) {
+            return res.status(400).json({ message: 'All required fields must be filled' });
+        }
+
+        if (jumlah_liter < 0 || harga_jual < 0) {
+            return res.status(400).json({ message: 'Jumlah liter and harga jual must be positive' });
+        }
+
         const sapi = await Sapi.findById(sapi_id).populate('kandang_id');
         if (!sapi) {
             return res.status(404).json({ message: 'Sapi not found' });
         }
 
-        if (sapi.status !== 'HIDUP') {
-            return res.status(400).json({ message: 'Milk production can only be recorded for live cows' });
+        if (sapi.status !== 'HIDUP' || sapi.jenis_kelamin != "BETINA") {
+            return res.status(400).json({ message: 'Milk production can only be recorded for live female cows' });
         }
 
         const kandang_id = sapi.kandang_id._id;
@@ -43,7 +51,7 @@ const createProduksiSusu = async (req, res) => {
 
         res.status(201).json({ message: 'Milk production recorded successfully', produksiSusu });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -86,17 +94,34 @@ const getProduksiSusuByKandang = async (req, res) => {
 const updateProduksiSusu = async (req, res) => {
     try {
         const { id } = req.params;
-        const peternak_id = req.user.userId;
 
         const produksiSusu = await ProduksiSusu.findById(id);
         if (!produksiSusu) {
             return res.status(404).json({ message: 'Milk production not found' });
         }
 
-        const updatedProduksi = await ProduksiSusu.findByIdAndUpdate(id, req.body, { new: true });
+        const { jumlah_liter, harga_jual, sapi_id } = req.body;
+
+        if ((jumlah_liter != null && jumlah_liter < 0) || (harga_jual != null && harga_jual < 0)) {
+            return res.status(400).json({ message: 'Jumlah liter and harga jual must be a positive number' });
+        }
+
+        if (sapi_id) {
+            const sapi = await Sapi.findById(sapi_id).populate('kandang_id');
+            if (!sapi) {
+                return res.status(404).json({ message: 'Sapi not found' });
+            }
+
+            if (sapi.status !== 'HIDUP') {
+                return res.status(400).json({ message: 'Milk production can only be recorded for live cows' });
+            }
+        }
+
+        const { populasi_akhir, ...updatedData } = req.body;
+        const updatedProduksi = await ProduksiSusu.findByIdAndUpdate(id, updatedData, { new: true });
         res.status(200).json({ message: 'Milk production updated successfully', produksi: updatedProduksi });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -109,10 +134,6 @@ const deleteProduksiSusu = async (req, res) => {
         const produksiSusu = await ProduksiSusu.findById(id);
         if (!produksiSusu) {
             return res.status(404).json({ message: 'Milk production not found' });
-        }
-
-        if (produksiSusu.peternak_id.toString() !== peternak_id) {
-            return res.status(403).json({ message: 'Forbidden' });
         }
 
         await ProduksiSusu.findByIdAndDelete(id);

@@ -10,8 +10,8 @@ const stokProdukSchema = new mongoose.Schema({
     }, 
     jumlah: { type: Number, required: true },
     satuan: { type: String, required: true },
-    harga: { type: Number},
-    tgl_masuk: { type: Date, default: Date.now },
+    harga: { type: Number },
+    tgl_masuk: { type: Date, default: Date.now, required: true },
     tgl_kedaluwarsa: { type: Date, required: true },
 });
 

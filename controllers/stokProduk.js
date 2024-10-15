@@ -6,6 +6,14 @@ const createStokProduk = async (req, res) => {
     try {
         const { nama, tipe_produk, jumlah, satuan, harga, tgl_masuk, tgl_kedaluwarsa, kandang_id } = req.body;
 
+        if (!nama || !tipe_produk || jumlah == null || !satuan || !tgl_kedaluwarsa || !kandang_id) {
+            return res.status(400).json({ message: 'All required fields must be filled' });
+        }
+
+        if (jumlah < 0 || (harga != null && harga < 0)) {
+            return res.status(400).json({ message: 'Jumlah and Harga must be positive values' });
+        }
+
         const kandang = await Kandang.findById(kandang_id);
         if (!kandang) {
             return res.status(404).json({ message: 'Kandang not found' });
@@ -25,7 +33,7 @@ const createStokProduk = async (req, res) => {
 
         res.status(201).json({ message: 'Product stock successfully added', stokProduk });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -47,15 +55,19 @@ const updateStokProduk = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const stokProduk = await StokProduk.findByIdAndUpdate(id, req.body, { new: true });
+        const { jumlah, harga } = req.body;
+        if ((jumlah != null && jumlah < 0) || (harga != null && harga < 0)) {
+            return res.status(400).json({ message: 'Jumlah and Harga must be positive values' });
+        }
 
+        const stokProduk = await StokProduk.findByIdAndUpdate(id, req.body, { new: true });
         if (!stokProduk) {
             return res.status(404).json({ message: 'Product stock not found' });
         }
 
         res.status(200).json({ message: 'Product stock successfully updated', stokProduk });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 

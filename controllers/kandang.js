@@ -7,6 +7,10 @@ const createKandang = async (req, res) => {
         const { nama_kandang, lokasi, kapasitas, peternak_ids } = req.body;
         const ppl_id = req.user.userId;
 
+        if ( !nama_kandang || !kapasitas ) {
+            return res.status(400).json({ message: 'All required fields must be filled' });
+        }
+
         // Verify peternak_ids
         if (peternak_ids){
             const peternakExist = await User.find({ _id: { $in: peternak_ids } });
@@ -19,7 +23,7 @@ const createKandang = async (req, res) => {
         await kandang.save();
         res.status(201).json({ message: 'Kandang successfully added', kandang });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -27,7 +31,8 @@ const createKandang = async (req, res) => {
 const updateKandang = async (req, res) => {
     try {
         const { id } = req.params;
-        const kandang = await Kandang.findByIdAndUpdate(id, req.body, { new: true });
+        const { ppl_id, ...updatedData } = req.body;
+        const kandang = await Kandang.findByIdAndUpdate(id, updatedData, { new: true });
 
         if (!kandang) {
             return res.status(404).json({ message: 'Kandang not found' });
@@ -35,7 +40,7 @@ const updateKandang = async (req, res) => {
 
         res.json({ message: 'Kandang successfully updated', kandang });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -77,7 +82,6 @@ const addPeternakToKandang = async (req, res) => {
             return res.status(400).json({ message: 'Peternak is already assigned to this kandang' });
         }
 
-        // Add peternak to the kandang
         kandang.peternak_ids.push(peternak_id);
         await kandang.save();
 

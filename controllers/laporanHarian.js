@@ -11,7 +11,7 @@ const createLaporanHarian = async (req, res) => {
         const inputTanggal = new Date(tanggal);
         const today = new Date();
         if (inputTanggal > today) {
-            throw new Error('Report date cannot be in the future');
+            return res.status(400).json({ message: 'Report date cannot be in the future' });
         }
         
         const produk = await StokProduk.findById(id_produk);
@@ -48,7 +48,7 @@ const createLaporanHarian = async (req, res) => {
         await laporan.save();
         res.status(201).json({ message: 'Daily report created successfully', laporan });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -85,14 +85,36 @@ const updateLaporanHarian = async (req, res) => {
             const inputTanggal = new Date(req.body.tanggal);
             const today = new Date();
             if (inputTanggal > today) {
-                throw new Error('Report date cannot be in the future');
+                return res.status(400).json( { error: 'Invalid or future report date' })
             }
         }
 
-        const updatedLaporan = await LaporanHarian.findByIdAndUpdate(id, req.body, { new: true });
+        if (req.body.id_produk || req.body.kandang_id) {
+            const id_produk = req.body.id_produk || laporan.id_produk;
+            const produk = await StokProduk.findById(id_produk);
+
+            if (!produk) {
+                return res.status(404).json({ message: 'Produk not found' })
+            }
+
+            const kandang_id = req.body.kandang_id || produk.kandang_id;
+            if (produk.kandang_id.toString() != kandang_id.toString()) {
+                return res.status(400).json({ message: 'Produk does not belong to the specified Kandang' });
+            }
+    
+            const kandang = await Kandang.findById(kandang_id);
+            if (!kandang) {
+                return res.status(404).json({ message: 'Kandang not found' });
+            }
+
+            req.body.kandang_id = kandang_id;
+        }
+
+        const { umur, ...updatedData } = req.body
+        const updatedLaporan = await LaporanHarian.findByIdAndUpdate(id, updatedData, { new: true });
         res.status(200).json({ message: 'Daily report updated successfully', laporan: updatedLaporan });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 

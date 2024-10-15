@@ -4,7 +4,7 @@ const kandangSchema = new mongoose.Schema({
     ppl_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     peternak_ids: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     nama_kandang: { type: String, required: true },
-    lokasi: { type: String, required: true },
+    lokasi: { type: String },
     kapasitas: { type: Number, required: true },
     tgl_pembuatan: { type: Date, default: Date.now },
     status: { 

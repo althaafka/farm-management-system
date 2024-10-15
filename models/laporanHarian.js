@@ -5,11 +5,11 @@ const laporanHarianSchema = new mongoose.Schema({
     peternak_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     kandang_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Kandang', required: true },
     id_produk: { type: mongoose.Schema.Types.ObjectId, ref: 'StokProduk', required: true },
-    tanggal: { type: Date, default: Date.now },
+    tanggal: { type: Date, default: Date.now, required: true },
     umur: { type: Number }, // day
-    pakan_terpakai: { type: Number, required: true },
-    obat_terpakai: { type: Number, required: true },
-    deplesi: { type: Number, required: true },
+    pakan_terpakai: { type: Number, default: 0, required: true },
+    obat_terpakai: { type: Number, default: 0, required: true },
+    deplesi: { type: Number, default: 0, required: true },
     keterangan: { type: String, required: false },
 });
 
@@ -22,6 +22,7 @@ const calculateAgeInDays = (firstFeedDate) => {
 // Pre-save hook to calculate age
 laporanHarianSchema.pre('save', async function (next) {
     try {
+        console.log("pre save")
         const laporan = this;
 
         // Update age
@@ -35,6 +36,7 @@ laporanHarianSchema.pre('save', async function (next) {
         }
 
         laporan.umur = calculateAgeInDays(firstFeed.tgl_masuk);
+        console.log(laporan.umur, firstFeed.tgl_masuk)
 
         next();
     } catch (error) {
@@ -45,6 +47,7 @@ laporanHarianSchema.pre('save', async function (next) {
 // Post-find hook to calculate age
 laporanHarianSchema.post(['find', 'findOne'], async function (docs, next) {
     try {
+        console.log("post find")
         if (!docs) return next();
 
         const laporanArray = Array.isArray(docs) ? docs : [docs];

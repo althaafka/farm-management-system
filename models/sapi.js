@@ -7,7 +7,7 @@ const sapiSchema = new mongoose.Schema({
     berat: { type: Number },
     status: { type: String, enum: ['HIDUP', 'MATI'], default: 'HIDUP' },
     tgl_pembelian: { type: Date, default: Date.now },
-    harga_beli: { type: Number, required: true }
+    harga_beli: { type: Number }
 });
 
 module.exports = mongoose.model('Sapi', sapiSchema);
